@@ -22,6 +22,7 @@ class KritikController extends Controller
     public function create()
     {
         //
+        return view('components.movie-show');
     }
 
     /**
@@ -30,6 +31,10 @@ class KritikController extends Controller
     public function store(StoreKritikRequest $request)
     {
         //
+        Kritik::create($request->all());
+
+    // Redirect dengan pesan sukses
+    return redirect()->route('kritik.index')->with('success', 'Kritik berhasil ditambahkan.');
     }
 
     /**
