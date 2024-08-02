@@ -47,6 +47,11 @@
                         <td>
                             <!-- Example actions; adjust as needed -->
                             <a href="{{ route('film.show', $film->id) }}" class="btn btn-info btn-sm">View</a>
+                             <form action="{{ route('film.destroy', $film->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm">DELETE</button>    
+                                </form>
                         </td>
                     </tr>
                 @endforeach
