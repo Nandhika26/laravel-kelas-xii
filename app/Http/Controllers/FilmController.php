@@ -12,11 +12,18 @@ use App\Http\Requests\StoreFilmRequest;
 use App\Http\Requests\UpdateFilmRequest;
 use Carbon\Carbon;
 
+
 class FilmController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     public function index()
+     {
+
+     }
+
     public function movies()
     {
         //
@@ -33,16 +40,17 @@ class FilmController extends Controller
      */
     public function create()
     {
-        //
+        $genres = Genre::all();
+        return view('film.create', compact('genres'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFilmRequest $request)
+   public function store(StoreFilmRequest $request)
     {
-        //
-    }
+        Film::create($request->validated());
+        return redirect()->route('film.index')->with('success', 'Berhasil menambahkan data FILM');}
 
     /**
      * Display the specified resource.
