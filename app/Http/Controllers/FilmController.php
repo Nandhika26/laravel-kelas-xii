@@ -100,7 +100,14 @@ class FilmController extends Controller
      */
     public function destroy(Film $film)
     {
-        //
+         // Hapus kritik yang terkait
+        Kritik::where('film_id', $film->id)->delete();
+        peran::where('film_id', $film->id)->delete();
+
+        // Hapus film
+        $film->delete();
+
+        return redirect()->route('film.index')->with('succes', 'Berhasil menghapus data FILM');
     }
 
     public function movieHome()
