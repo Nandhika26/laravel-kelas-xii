@@ -37,10 +37,10 @@
               </ul>
             </li>
             <li class="w3_home_act {{ Route::current()->getName() == 'movies' ? 'active' : '' }}"><a href="{{ route('movies') }}">Movies</a></li>
-            <li class="w3_home_act {{ Route::current()->getName() == 'film.index' ? 'active' : '' }}"><a href="{{ route('film.index') }}">Film</a></li>
+            <li class="w3_home_act {{ Route::current()->getName() == 'film' ? 'active' : '' }}"><a href="{{ route('film.index') }}">Film</a></li>
           </ul>
         </nav>
       </div>
-    </nav>	
+    </nav>
   </div>
 </div>

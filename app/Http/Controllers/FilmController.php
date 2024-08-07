@@ -92,7 +92,9 @@ class FilmController extends Controller
      */
     public function update(UpdateFilmRequest $request, Film $film)
     {
-        //
+        
+        $film->update($request->validated());
+        return redirect()->route('film.index')->with('success', 'Berhasil memperbarui data FILM');
     }
 
     /**
