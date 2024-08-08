@@ -29,7 +29,7 @@
 <!-- /w3l-medile-movies-grids -->
 <div class="container mt-5">
 	<h1 class="text-center mb-4">Form Create</h1>
-	<form id="filmForm" action="{{ route('film.store') }}" method="POST">
+	<form id="filmForm" action="{{ route('film.store') }}" method="POST" 	enctype="multipart/form-data">
 		@csrf
 		<div class="form-group">
 			<label for="title">Masukan Judul</label>
@@ -44,9 +44,9 @@
 			<input type="number" class="form-control" name="year" id="year" placeholder="MASUKAN TAHUN">
 		</div>
 		<div class="form-group">
-			<label for="poster">Link Poster</label>
-			<input type="text" class="form-control" name="poster" id="poster" placeholder="LINK POSTER">
-		</div>
+			<label for="poster">Upload Poster</label>
+			<input type="file" class="form-control" name="poster" id="poster" accept="image/*" required>
+		</div>		
 		<div class="form-group">
 			<label for="genre_id">Pilih Genre</label>
 			<select name="genre_id" id="genre_id" class="form-control @error('genre_id') is-invalid @enderror" required>
@@ -81,69 +81,74 @@
 		);
 
 		$('#filmForm').on('submit', function(e) {
-			e.preventDefault(); // buat nyegah pengiriman form secara default 
-			var isValid = true;
-			var errors = [];
+    e.preventDefault(); // Mencegah pengiriman form secara default
+    var isValid = true;
+    var errors = [];
 
-			if ($('#title').val().trim() === '') {
-				isValid = false;
-				errors.push("Judul");
-			}
-			if ($('#sinopsis').val().trim() === '') {
-				isValid = false;
-				errors.push("Sinopsis");
-			}
-			if ($('#year').val().trim() === '') {
-				isValid = false;
-				errors.push("Tahun");
-			}
-			if ($('#poster').val().trim() === '') {
-				isValid = false;
-				errors.push("Link Poster");
-			}
-			if ($('#genre_id').val().trim() === '') {
-				isValid = false;
-				errors.push("Genre");
-			}
-			
-			if (!isValid) {
-				var errorText = "Tolong isi kolom:\n" + errors.join(", ");
-				Swal.fire({
-					title: 'Peringatan!',
-					text: errorText,
-					icon: 'error',
-					confirmButtonText: 'Tutup'
-				});
-			} else {
-				// Submit menggunakan AJAX (Asynchronous JavaScript and XML) untuk mengirim dan menerima data dari server tanpa memuat ulang halaman, salah satu kegunaan nya web lebih responsif 
-				$.ajax({
-					url: $(this).attr('action'),
-					type: 'POST',
-					data: $(this).serialize(),
-					success: function(response) { //fungsi ini dipanggil jika permintaan berhasil 
-						Swal.fire({
-							title: 'Berhasil!',
-							text: 'Data Film berhasil ditambahkan!',
-							icon: 'success',
-							confirmButtonText: 'Tutup'
-						}).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = "{{ route('film.index') }}"; // Redirect ke halaman film.index
-                                }
-                            });
-					},
-					error: function(xhr) { //fungsi ini dipanggil jika permintaan gagal 
-						Swal.fire({
-							title: 'Error!',
-							text: 'Terjadi kesalahan saat menambahkan film.',
-							icon: 'error',
-							confirmButtonText: 'Tutup'
-						});
-					}
-				});
-			}
-		});
+    if ($('#title').val().trim() === '') {
+        isValid = false;
+        errors.push("Judul");
+    }
+    if ($('#sinopsis').val().trim() === '') {
+        isValid = false;
+        errors.push("Sinopsis");
+    }
+    if ($('#year').val().trim() === '') {
+        isValid = false;
+        errors.push("Tahun");
+    }
+    if ($('#poster').val().trim() === '') {
+        isValid = false;
+        errors.push("Poster");
+    }
+    if ($('#genre_id').val().trim() === '') {
+        isValid = false;
+        errors.push("Genre");
+    }
+
+    if (!isValid) {
+        var errorText = "Tolong isi kolom:\n" + errors.join(", ");
+        Swal.fire({
+            title: 'Peringatan!',
+            text: errorText,
+            icon: 'error',
+            confirmButtonText: 'Tutup'
+        });
+    } else {
+        var formData = new FormData(this); // Menggunakan FormData untuk menangani form dengan file
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            contentType: false, // Penting: jangan ubah konten tipe
+            processData: false, // Penting: jangan proses data
+            success: function(response) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Data Film berhasil ditambahkan!',
+                    icon: 'success',
+                    confirmButtonText: 'Tutup'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('film.index') }}"; // Redirect ke halaman film.index
+                    }
+                });
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat menambahkan film.',
+                    icon: 'error',
+                    confirmButtonText: 'Tutup'
+                });
+            }
+        });
+    }
+});
+
 	});
+	
 </script>
 
 <!-- here stars scrolling icon -->

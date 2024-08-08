@@ -50,9 +50,19 @@ class FilmController extends Controller
      * Store a newly created resource in storage.
      */
    public function store(StoreFilmRequest $request)
-    {
-        Film::create($request->validated());
-        return redirect()->route('film.index')->with('success', 'Berhasil menambahkan data FILM');}
+{
+    $validated = $request->validated();
+
+    if ($request->hasFile('poster')) {
+        $posterPath = $request->file('poster')->store('public/images');
+        $validated['poster'] = str_replace('public/', '', $posterPath);
+    }
+
+    Film::create($validated);
+
+    return redirect()->route('film.index')->with('success', 'Berhasil menambahkan data FILM');
+}
+
 
     /**
      * Display the specified resource.
@@ -92,10 +102,16 @@ class FilmController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateFilmRequest $request, Film $film)
-    {
-        
-        $film->update($request->validated());
-        return redirect()->route('film.index')->with('success', 'Berhasil memperbarui data FILM');
+{
+    $validated = $request->validated();
+
+    if ($request->hasFile('poster')) {
+        $posterPath = $request->file('poster')->store('public/images');
+        $validated['poster'] = str_replace('public/', '', $posterPath);
+    }
+
+    $film->update($validated);
+    return response()->json(['success' => 'Berhasil memperbarui data FILM']);
     }
 
     /**

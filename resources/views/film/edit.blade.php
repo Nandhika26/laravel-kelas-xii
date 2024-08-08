@@ -26,7 +26,7 @@
 <!-- /w3l-medile-movies-grids -->
 <div class="container mt-5">
 	<h1 class="text-center mb-4">Edit Film</h1>
-	<form action="{{ route('film.update', $film->id) }}" method="POST">
+	<form id="filmEditForm" action="{{ route('film.update', $film->id) }}" method="POST" enctype="multipart/form-data">
 		@csrf
 		@method('PUT')
 		<div class="form-group">
@@ -42,8 +42,8 @@
 			<input type="number" class="form-control" name="year" id="year" value="{{ $film->year }}">
 		</div>
 		<div class="form-group">
-			<label for="poster">Link Poster</label>
-			<input type="text" class="form-control" name="poster" id="poster" value="{{ $film->poster }}">
+			<label for="poster">Upload Poster</label>
+			<input type="file" class="form-control" name="poster" id="poster" accept="image/*">
 		</div>
 		<div class="form-group">
 			<label for="genre_id">Pilih Genre</label>
@@ -61,7 +61,8 @@
 <!-- footer -->
 @include('templates.component.footer')
 <!-- //footer -->
-<!-- Bootstrap Core JavaScript -->
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <script src="{{ asset('template/js/bootstrap.min.js') }}"></script>
 <script>
 	$(document).ready(function(){
@@ -75,9 +76,81 @@
 				$(this).toggleClass('open');       
 			}
 		);
+
+		$('#filmEditForm').on('submit', function(e) {
+			e.preventDefault(); // Mencegah pengiriman form secara default
+			var isValid = true;
+			var errors = [];
+
+			if ($('#title').val().trim() === '') {
+				isValid = false;
+				errors.push("Judul");
+			}
+			if ($('#sinopsis').val().trim() === '') {
+				isValid = false;
+				errors.push("Sinopsis");
+			}
+			if ($('#year').val().trim() === '') {
+				isValid = false;
+				errors.push("Tahun");
+			}
+			// Poster optional, tetapi bisa ditambahkan validasi lain jika diperlukan
+			if ($('#genre_id').val().trim() === '') {
+				isValid = false;
+				errors.push("Genre");
+			}
+
+			if (!isValid) {
+				var errorText = "Tolong isi kolom:\n" + errors.join(", ");
+				Swal.fire({
+					title: 'Peringatan!',
+					text: errorText,
+					icon: 'error',
+					confirmButtonText: 'Tutup'
+				});
+			} else {
+				var formData = new FormData(this); // Menggunakan FormData untuk menangani form dengan file
+				$.ajax({
+    url: $(this).attr('action'),
+    type: 'POST',
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function(response) {
+        if (response.success) {
+            Swal.fire({
+                title: 'Berhasil!',
+                text: response.success,
+                icon: 'success',
+                confirmButtonText: 'Tutup'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('film.index') }}"; 
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: response.error,
+                icon: 'error',
+                confirmButtonText: 'Tutup'
+            });
+        }
+    },
+    error: function(xhr) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Terjadi kesalahan saat memperbarui film.',
+            icon: 'error',
+            confirmButtonText: 'Tutup'
+        });
+    }
+});
+
+			}
+		});
 	});
 </script>
-<!-- //Bootstrap Core JavaScript -->
 <!-- here stars scrolling icon -->
 <script type="text/javascript">
 	$(document).ready(function() {

@@ -31,7 +31,6 @@
                     <th>Sinopsis</th>
                     <th>Year</th>
                     <th>Genre</th>
-                    <th>Poster</th>
                     <th>Actions</th> <!-- Added this header for actions -->
                 </tr>
             </thead>
@@ -43,7 +42,7 @@
                         <td>{{ $film->sinopsis }}</td>
                         <td>{{ $film->year }}</td>
                         <td>{{ $film->genre->name ?? 'N/A' }}</td>
-                        <td><img src="{{ $film->poster }}" alt="{{ $film->title }}" width="100"></td>
+                        </td>
                         <td>
                             <!-- Example actions; adjust as needed -->
                             <a href="{{ route('film.show', $film->id) }}" class="btn btn-info btn-sm">View</a>
