@@ -17,3 +17,6 @@ Route::get('/movies/{kritik}/edit', [KritikController::class, 'edit'])->name('kr
 Route::put('/movies/{kritik}', [KritikController::class, 'update'])->name('kritik.update');
 Route::get('/movies/{kritik}/show', [KritikController::class, 'show'])->name('kritik.show');
 Route::delete('/movies/{kritik}', [KritikController::class, 'destroy'])->name('kritik.destroy');
+Route::resource('film', FilmController::class)->parameters([
+    'film' => 'film'
+]);

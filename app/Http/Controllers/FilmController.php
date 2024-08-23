@@ -12,11 +12,20 @@ use App\Http\Requests\StoreFilmRequest;
 use App\Http\Requests\UpdateFilmRequest;
 use Carbon\Carbon;
 
+
 class FilmController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+     public function index()
+     {
+        $films = Film::all();
+        $genres = Genre::all();
+        return view('film.index', compact('films','genres'));
+     }
+
     public function movies()
     {
         //
@@ -33,16 +42,27 @@ class FilmController extends Controller
      */
     public function create()
     {
-        //
+        $genres = Genre::all();
+        return view('film.create', compact('genres'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreFilmRequest $request)
-    {
-        //
+   public function store(StoreFilmRequest $request)
+{
+    $validated = $request->validated();
+
+    if ($request->hasFile('poster')) {
+        $posterPath = $request->file('poster')->store('public/images');
+        $validated['poster'] = str_replace('public/', '', $posterPath);
     }
+
+    Film::create($validated);
+
+    return redirect()->route('film.index')->with('success', 'Berhasil menambahkan data FILM');
+}
+
 
     /**
      * Display the specified resource.
@@ -74,15 +94,24 @@ class FilmController extends Controller
      */
     public function edit(Film $film)
     {
-        //
+        $genres = Genre::all();
+        return view('film.edit', compact('film','genres'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateFilmRequest $request, Film $film)
-    {
-        //
+{
+    $validated = $request->validated();
+
+    if ($request->hasFile('poster')) {
+        $posterPath = $request->file('poster')->store('public/images');
+        $validated['poster'] = str_replace('public/', '', $posterPath);
+    }
+
+    $film->update($validated);
+    return response()->json(['success' => 'Berhasil memperbarui data FILM']);
     }
 
     /**
@@ -90,7 +119,14 @@ class FilmController extends Controller
      */
     public function destroy(Film $film)
     {
-        //
+         // Hapus kritik yang terkait
+        Kritik::where('film_id', $film->id)->delete();
+        peran::where('film_id', $film->id)->delete();
+
+        // Hapus film
+        $film->delete();
+
+        return redirect()->route('film.index')->with('succes', 'Berhasil menghapus data FILM');
     }
 
     public function movieHome()

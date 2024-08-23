@@ -24,6 +24,7 @@ class KritikController extends Controller
     public function create()
     {
         //
+        return view('components.movie-show');
     }
 
     /**
