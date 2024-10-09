@@ -11,7 +11,7 @@ class StoreKritikRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreKritikRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|numeric|exists:users,id',
+            'film_id' => 'required|numeric|exists:films,id',
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'required|string',
         ];
     }
 }

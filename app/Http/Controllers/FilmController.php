@@ -80,9 +80,9 @@ class FilmController extends Controller
                         ->OrderBy('created_at', 'asc')
                         ->limit(9)
                         ->get();
-        $comments        = Kritik::select('comment', 'user_id')
+        $comments        = Kritik::select('comment', 'user_id', 'rating', 'id') //menambahkan rating dan id
                         ->where('film_id', '=', $film->id)
-                        ->orderBy('created_at', 'asc')
+                        ->orderBy('created_at', 'desc') //menambahkan desc, untuk comen baru paling atas di kolom komen
                         ->limit(10)
                         ->get();
         $perans         = Peran::all()->where('film_id', '=', $film->id);

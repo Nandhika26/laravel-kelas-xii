@@ -11,7 +11,7 @@ class UpdateKritikRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateKritikRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'required|string',
         ];
     }
 }
