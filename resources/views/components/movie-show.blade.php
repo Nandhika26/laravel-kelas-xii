@@ -118,15 +118,26 @@
           <div class="all-comments-info">
             <a href="#">Comments</a>
             <div class="agile-info-wthree-box">
-              <form>
-                <input type="text" placeholder="Name" required="">			           					   
-                <input type="text" placeholder="Email" required="">
-                <input type="text" placeholder="Phone" required="">
+              @if (Auth::check())
+              <form method="post" action="">
+              @csrf
+                @php
+                $user = Auth::user();
+                @endphp
+                @if ($user->role_id !== 2 && $user->role !== 'user')
                 <textarea placeholder="Message" required=""></textarea>
                 <input type="submit" value="SEND">
-                <div class="clearfix"> </div>
               </form>
-            </div>
+                @else
+                <p class="text-danger"><b>Admin </b>tidak dapat memberikan komentar!</p>
+                @endif
+                @else
+                <textarea placeholder="Message" required="" disabled></textarea>
+                    <p>silahkan <a href="#" data-toggle="modal" data-target="#myModal"><b
+                    class="text-danger">Login</b></a> terlebih dahulu untuk memberikan komentar!
+                  </p>
+                  @endif
+              </div>
           </div>
           <div class="media-grids">
             @foreach ($comments as $comment)
