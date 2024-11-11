@@ -145,16 +145,16 @@
                         <div class="all-comments-info">
                             <a href="#">Comments</a>
                             <div class="agile-info-wthree-box">
-                                <form method="POST" action="{{ route('kritik.store', ['film' => $film->id]) }}">
+                                @if (Auth::check())
+                                <form method="post" action="{{ route('kritik.store', ['film' => $film->id]) }}">
                                     @csrf
+                                    @php
+                                    $user = Auth::user();
+                                    @endphp
+                                    @if ($user->role_id !== 2 && $user->role !== 'user')
                                     <input type="hidden" name="film_id" value="{{ $film->id }}">
-                                    <div class="user_id" style="margin-bottom: 25px;">
-                                        <input type="number" name="user_id" placeholder="User ID" required=""
-                                            style="width: 60%; padding: 8px; border-radius: 4px; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,.075);">
-                                        @error('user_id')
-                                            <p style="color: red;">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                    <input type="hidden" name="user_id" value="{{ $film->id }}">
+                                    
                                     <div class="form-group mt-5">
                                         <select name="rating" id="rating" class="form-control" style="width: 60%">
                                             <option value="">Select a rating</option>
@@ -169,6 +169,13 @@
                                     <input type="submit" value="SEND">
                                     <div class="clearfix"> </div>
                                 </form>
+                                @else
+                                <p class="text-danger"><b>Admin</b> tidak bisa memberikan komentar!</p>
+                                @endif
+                                @else
+                                <textarea placeholder="Message" required="" name="comment" disabled></textarea>
+                                <p>Silahkan <a href="#" data-toggle="modal" data-target="#myModal"><b class="text-danger">Login</b></a> terlebih dahulu untuk memberikan komentar!</p>
+                                @endif
                             </div>
                         </div>
                         <div class="media-grids">

@@ -13,9 +13,9 @@ class KritikController extends Controller
      */
     public function index()
     {
+        //
         $kritik = Kritik::with('user')->get();
         return view('movies', compact('kritik'));
-
     }
 
     /**
@@ -32,8 +32,9 @@ class KritikController extends Controller
      */
     public function store(StoreKritikRequest $request)
     {
+        //
         $data = $request->all();
-        $data['film_id'] = $request->input('film_id');
+        $data['user_id'] = $request->input('user_id');
         Kritik::create($data);
         return redirect()->back();
     }
@@ -43,6 +44,7 @@ class KritikController extends Controller
      */
     public function show(Kritik $kritik)
     {
+        //
         $film = $kritik->film;
         return view('components.showKomentar', compact('kritik', 'film'));
     }
@@ -61,6 +63,7 @@ class KritikController extends Controller
      */
     public function update(UpdateKritikRequest $request, $id)
     {
+        //
         $kritik = Kritik::findOrFail($id);
         $kritik->comment = $request->input('comment');
         $kritik->rating = $request->input('rating');
@@ -73,6 +76,7 @@ class KritikController extends Controller
      */
     public function destroy($id)
     {
+        //
         $kritik = Kritik::findOrFail($id);
         $film_id = $kritik->film_id;
         $kritik -> delete();

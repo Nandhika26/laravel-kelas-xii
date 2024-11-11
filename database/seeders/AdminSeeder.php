@@ -27,12 +27,12 @@ class AdminSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'admin',
-            'email' => 'admin@example.com',
+            'name' => 'user',
+            'email' => 'user@example.com',
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
             'remember_token' => Str::random(10),
-            'role_id' => 2,
+            'role_id' => 1,
             'profile_id' => $profile->id,
         ]);
     }
