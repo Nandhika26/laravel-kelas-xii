@@ -35,8 +35,14 @@ class KritikController extends Controller
         //
         $data = $request->all();
         $data['user_id'] = $request->input('user_id');
-        Kritik::create($data);
-        return redirect()->back();
+        $data['film_id'] = $request->input('film_id');
+        $kritik = Kritik::create($data);
+
+            // Muat ulang data kritik bersama relasi user
+            $kritik->load('user');
+
+            // Kembalikan respons, misalnya sebagai JSON untuk di-render langsung di front-end
+            return redirect()->back();
     }
 
     /**

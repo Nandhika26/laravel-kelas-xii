@@ -152,8 +152,8 @@
                                     $user = Auth::user();
                                     @endphp
                                     @if ($user->role_id !== 2 && $user->role !== 'user')
+                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
                                     <input type="hidden" name="film_id" value="{{ $film->id }}">
-                                    <input type="hidden" name="user_id" value="{{ $film->id }}">
                                     
                                     <div class="form-group mt-5">
                                         <select name="rating" id="rating" class="form-control" style="width: 60%">
@@ -181,9 +181,15 @@
                         <div class="media-grids">
                             @foreach ($comments as $comment)
                                 <div class="media" id="comment-container-{{ $comment->id }}">
+                                    @csrf
+                                    @php
+                                    $user = Auth::user();
+                                    @endphp
+                                    @if ($user->role_id !== 2 && $user->role !== 'user')
                                     <div class="media-header">
                                         <h5>{{ $comment->user()->first()->name }}</h5>
                                         <div class="media-icons" style="display: flex; gap: 10px; font-size: 15px;">
+                                        @else
                                             <form action="{{ route('kritik.edit', ['kritik' => $comment->id]) }}"
                                                 method="GET" style="display: inline;">
                                                 <button type="submit" class="btn btn-primary">
@@ -206,6 +212,7 @@
                                                     <i class="fa-solid fa-circle-info"></i>
                                                 </button>
                                             </form>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="media-left">
